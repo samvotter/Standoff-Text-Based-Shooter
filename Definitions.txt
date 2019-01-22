@@ -1,0 +1,57 @@
+[Character]
+Characters are the main player avatars. All characters have a “class” containing various upgrades unique to them.
+
+[Minion]
+Any creature created by a character.
+
+[Opponent]
+Any target on the other side.
+
+[Target]
+The intended recipient of an action.
+
+[Class]
+The type of character. By default, each class comes with 6 upgrades unique to that class.
+
+[Bleeding]
+Each time a character receives damage from a direct shot, that character gains 1 stack of bleed. Bleed causes characters to lose 1 health per stack at the end of each turn. Bleeding damage is not prevented by armor or shields. 
+
+[Belief]
+Belief represents the extent to which you are enthralled. At the end of each turn, a character’s belief grows equal to the number of belief stacks on them. Successfully attacking targets reduces a characters belief by 3 and the number of stacks by 1. 
+
+[Health]
+All characters and minions have “Health”. When this value reaches 0, the character or minion dies.
+By default, characters have 100 health. Minion health will vary.
+
+[Accuracy]
+By default, firing accuracy is set to 60%. Various effects may increase or decrease this value. 
+Being shot in the hand reduces accuracy by 50%. 
+Shot in the hand: 60%, 30%, 15%, 7.5%, 3.75%, 1.875%
+Being shot in the arm reduces accuracy by 10%.
+Shot in the arm: 60%, 54%, 48.6%, 43.74%, 39.366%, 35.4294%
+
+[Damage]
+By default, weapon damage is set to 35. Various effects may increase or decrease this value. 
+
+[Burning]
+Burning causes the target to lose health equal to the number of “Burning” stacks on that target. Burning has a 20% chance to spread to one other target at the end of each turn and decreases by 1 stack.
+
+[Turns]
+A turn begins when both players attempt to fire. A turn is over when each shot from both sides is resolved. 
+
+[Body Parts]
+All characters have six body parts: Head, Chest, Arms, Hands, Legs, and Feet. There are different damage multipliers and effects associated with one. If an attack made against a character is successful, it has an equal chance of hitting any one of these body parts.
+Being shot in the [Body Part] results in [x] percent damage.
+Head: 200%
+Chest: 100%
+Arms: 75% and 10% accuracy reduction
+Hands: 20% and 50% accuracy reduction
+Legs: 75%
+Feet: 20%
+Unless specified, minions do not have body parts and all attacks made against them will strike for the full damage amount.
+
+[Ammo]
+Ammo refers to the amount of ammunition left in the gun. All characters have 6 ammo by default. Firing the gun costs 1 ammo.
+
+[Upgrades]
+Upgrades are the set of unique abilities or modifiers offered by a character’s class type. By default, each class has six upgrades they can choose from. Over the course of a game, each character will have the opportunity to select 1 upgrade from this set 4 times.

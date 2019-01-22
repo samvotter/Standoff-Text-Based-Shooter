@@ -1,0 +1,109 @@
+v23:
+Fixed the import statements.
+
+v22:
+Separated subclasses into unique modules. The method appears to be inconsistent with best practices.
+	There may be some other more efficienct, clean, and modular way to connect modules.
+	However the new method does at least perform as expected. Consider it a potential area
+	of improvement. 
+
+v21:
+Finished work on Knight character. First character to have all 6 upgrades completed.
+It seems possible or likely that main systems within Game_Board will still have to be
+    reworked for the new format. For example, firing and firing resolution do still need
+    to be separated to avoid interference, however, the way resolution is currently
+    handled does not allow for accurate reporting of shields and armor. Damage is
+    calculated correctly (As in 100 damage with 50 shields and 10 armor *correctly*
+    applies 100*.50 - 10 = 40 to the appropriate target) but the console text will
+    report the full 100 damage done.
+
+v20:
+Begun work on a new class: Knight. Building the character from the ground up using the new
+    scheme. Appears to require most functions to simply turn on or off a switch. At least
+    in the current implementation. For example: I cannot, by applying an upgrade card,
+    attack another player. Simply because the Game_Board.round() function is not accepting
+    attack results at the time it calls Game_Board.choose_upgrade().
+
+I believe the solution to this might require virtually all functions to return gamestate
+    class objects and the changes made inside the function must happen to that gamestate
+    object.
+
+v19:
+DRAMATIC CHANGE!!!!
+Renamed Game_Proto to Game_Board to be more in line with how *CLASSES* are named
+Game_Board is a class object which will be passed as an argument to character functions
+    this way character functions can directly the gamestate. I predict that this will
+    allow me to better implement the many difficult to imagine abilities while also
+    shortening the required code. THIS IS A GAMECHANGER!!!!!!
+
+v18:
+Started work on GUI. Still very raw
+
+v17:
+Continued with the busywork of updating classes to conform with the new format of applying upgrades
+    Still unfinished.
+
+V16:
+Added a new attributed called "Avoidance" and changed attack sequence to account for it.
+    Avoidance is a flat reduction in the accuracy of attacks made against the target
+
+V15?:
+Changed the upgrade system to dynamically reallocate options to a shrinking
+	list of positions.
+Continued work implementing new characters. 
+
+V13:
+Began implementing a system for choosing and applying upgrades.
+one known bug: there is a while loop performing a bare evaluation for valid input,
+    checking if the input is an int between 1 and 6. However choosing 1 removes 1
+    from the list, so next time it should only validate between 1-5.
+Minion system still not implemented
+Nothing prevents users from choosing same upgrade repeatedly.
+
+V12:
+changed take damage function to also pass the body part that has been targeted
+	potentially useful for resolving upgrades that depend on being hit in a certain spot
+V11:
+Tested to make sure team functions work with multiple characters: It does.
+Moved the functions generating results to the character class.
+    The hope is to that will allow results to be more modular.
+Characters now report their results as a list of result lists:
+    [[self, cause, damage, target], [self, cause, damage, target] . . . ]
+potentially allowing for a shot to hit multiple targets and
+    changing the damage amount per target.
+
+V10: FIXED INTO A WORKING STATE
+	Should now be compatible with:
+		1. *Teams* of players on both sides
+		2. Targets are chosen randomly
+		3. upgrades still not implemented
+	Major hurdles overcome:
+		1. Base game is back to functioning correctly
+		2. TEAMS
+		3. Negative effects from wounds are applied after both teams have fired.
+
+V9:
+//Changes that need to be made:
+	1. All class functions need to be way more segmented. Starting with is_hit.
+	2. Attack routine needs to be individualized to the subclass.
+	---------
+	Dramatically altered game behaviors and organization. Should be more moddable.
+	Completed 1/2
+V8:
+//Classes
+continued translating upgrades into self.upgrades messages.
+
+V7:
+//Classes
+created "upgrades" variable which should contain a subclass's available upgrades
+started writing self.upgrade lists
+created a pick_upgrade defintion
+Character archetypes established but mostly blank.
+Fixed bug with left_over interacting with shields
+created variable to track maxhp
+//Game_Proto
+Created upgrade breaks in the code current says "pass"
+Recognises subclasses from Classes Module
+Functions as intended
+	Win Condition Bug:
+		If both characters die on the same turn, does not register correctly.

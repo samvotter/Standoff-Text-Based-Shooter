@@ -1,0 +1,28 @@
+Cowboy
+Podunk Cow-Poke
+Doctor
+Scoundrel
+Lawman
+Barman
+Native Indian
+Ninja
+Missionary
+Werewolf
+Vampire
+Zombie
+Eldritch Horror
+Alien
+Robot
+Shapeshifter
+Cattle Driver
+WW1 Doughboy
+Deity
+Gambler
+Hustler
+Prospector
+Land Baron
+Judge
+Mayor
+Banker
+Snake Oil Salesman
+Train Conductor
