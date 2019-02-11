@@ -1,3 +1,13 @@
+v26:
+Continued work updating various classes. From Alien through Doughboys is now a lot more
+    complete.
+
+v25:
+Added an empty turn_start function to the character class.
+Began work on Banker Subclass.
+For the sake of efficiency, it might make sense to create a dictionary
+    for character_dictionary[name] = id
+
 v23:
 Fixed the import statements.
 

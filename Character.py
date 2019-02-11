@@ -99,12 +99,13 @@ class Character:
 
     def take_damage(self, damage):
         # if the target is alive . . .
+        reduce = damage
         if self.alive is True:
             # and they have shields . . .
             if self.shields > 0:
                 # shields reduce incoming damage by a percentage.
                 damage *= self.shields/100
-                self.shields -= damage
+                self.shields -= reduce
                 if self.shields < 0:
                     self.shields = 0
             # and if they have armor
@@ -269,6 +270,9 @@ class Character:
             return result
 
     def before_combat(self, gamestate):
+        return gamestate
+
+    def turn_start(self, gamestate):
         return gamestate
 
     # Game Getter

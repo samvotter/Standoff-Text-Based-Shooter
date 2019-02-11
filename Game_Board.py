@@ -48,13 +48,14 @@ class CombatEncounterSpace:
         self.left_side = left_side
         self.right_side = right_side
         self.graveyard = []
+        self.character_dictionary = {}
 
         # Game Data
         self.turn = 0
 
     def choose_characters(self):
         self.left_side.append(Character_Cowboy.Cowboy("Cowboy", 100, 0, 0))
-        self.right_side.append(Character_Knight.Knight("Knight", 100, 0, 0))
+        self.right_side.append(Character_Banker.Banker("Banker", 100, 0, 0))
 
     def bullet_wounds(self, character, body_part, damage, bleed_dmg):
         if body_part == "Chest":
@@ -63,7 +64,7 @@ class CombatEncounterSpace:
         elif body_part == "Arms":
             if character.take_damage((3 / 5)*damage) is True:
                 character.change_bleed(bleed_dmg)
-            character.change_accuracy("*", (9/10))
+            character.change_accuracy("*", (9 / 10))
         elif body_part == "Hands":
             if character.take_damage((1 / 5) * damage) is True:
                 character.change_bleed(bleed_dmg)
@@ -122,6 +123,15 @@ class CombatEncounterSpace:
             character.set_side("R")
             r += 1
 
+        # UI - Turn Start
+        # Left Side
+        for character in gamestate.left_side:
+            gamestate = character.turn_start(gamestate)
+
+        # Right Side
+        for character in gamestate.right_side:
+            gamestate = character.turn_start(gamestate)
+
         # UI - Health
         print("********************************************************")
         print("Turn:", gamestate.turn)
@@ -130,12 +140,16 @@ class CombatEncounterSpace:
         # Left Side
         for character in gamestate.left_side:
             print(character.get_name() + ": " + str(character.get_health()))
+            if float(character.shields) > 0:
+                print("Shields:", str(character.shields))
         # UI
         print("********************************************************")
         print("Right Side: ")
         # Right Side
         for character in gamestate.right_side:
             print(character.get_name() + ": " + str(character.get_health()))
+            if float(character.shields) > 0:
+                print("Shields:", str(character.shields))
         print("********************************************************")
 
         # UI - Upgrades

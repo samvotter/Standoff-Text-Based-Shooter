@@ -30,42 +30,44 @@ class Barman(Character.Character):
     def apply_upgrade(self, chosen, gamestate):
         choice = self.upgrade_dict[chosen]
         if choice == 1:
-            self.insurance_money()
+            self.insurance_money(gamestate)
+            return gamestate
         elif choice == 2:
-            self.real_power()
+            self.real_power(gamestate)
+            return gamestate
         elif choice == 3:
-            self.under_the_table()
+            self.under_the_table(gamestate)
+            return gamestate
         elif choice == 4:
-            self.drinking_contest()
+            self.drinking_contest(gamestate)
+            return gamestate
         elif choice == 5:
-            self.pound_of_flesh()
+            self.pound_of_flesh(gamestate)
+            return gamestate
         elif choice == 6:
-            self.water_down()
+            self.water_down(gamestate)
+            return gamestate
         else:
             print("ERROR APPLYING UPGRADE")
 
-    def insurance_money(self):
-        # all characters including yourself gain 4 stacks of burning.
-        # in three turns, you heal for 10.
-        pass
+    def insurance_money(self, gamestate):
+        return gamestate
 
-    def real_power(self):
-        # the next time an opponent character dies
-        # you may choose an other target to die instead.
-        pass
+    def real_power(self, gamestate):
+        return gamestate
 
-    def under_the_table(self):
-        # take a free shot at any target before any other upgrade cards are revealed.
-        pass
+    def under_the_table(self, gamestate):
+        return gamestate
 
-    def drinking_contest(self):
-        # every shot lowers the accuracy of target shooter by -10%
-        pass
+    def drinking_contest(self, gamestate):
+        return gamestate
 
-    def pound_of_flesh(self):
-        # when an opponent misses, you gain 5 of their health
-        pass
+    def pound_of_flesh(self, gamestate):
+        return gamestate
 
-    def water_down(self):
-        # everyone's damage is reduced by 10.
-        pass
+    def water_down(self, gamestate):
+        for character in gamestate.left_side:
+            character.damage -= 10
+        for character in gamestate.right_side:
+            character.damage -= 10
+        return gamestate
