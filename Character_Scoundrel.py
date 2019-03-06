@@ -44,11 +44,13 @@ class Scoundrel(Character.Character):
         # +20% chance attacks made against you will miss, your own accuracy also decreases by -20%
         self.avoidance = 20
         self.accuracy -= 20
+        return gamestate
 
     def wanton_cruelty(self, gamestate):
         # Your accuracy is reduced by 50%. Damage is increased by 30%."
         self.accuracy /= 2
         self.damage *= (4/3)
+        return gamestate
 
     def cannot_lose(self, gamestate):
         # your misses create an Innocent minion and hit it instead.

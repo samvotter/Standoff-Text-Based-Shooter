@@ -47,10 +47,7 @@ class Doctor(Character.Character):
             print("ERROR APPLYING UPGRADE")
 
     def bandage(self, gamestate):
-        if self.side == "L":
-            gamestate.left_side[self.id].bleed = 0
-        elif self.side == "R":
-            gamestate.right_side[self.id].bleed = 0
+        self.bleed = 0
         return gamestate
 
     def reputation(self, gamestate):
@@ -58,12 +55,11 @@ class Doctor(Character.Character):
         pass
 
     def triage(self, gamestate):
+        self.triage_switch = True
         if self.side == "L":
-            gamestate.left_side[self.id].triage_switch = True
             for character in gamestate.left_side:
                 gamestate.left_side[self.id].triage_dict[character.get_name()] = character.bleed
         elif self.side == "R":
-            gamestate.right_side[self.id].triage_switch = True
             for character in gamestate.right_side:
                 gamestate.right_side[self.id].triage_dict[character.get_name()] = character.bleed
         return gamestate
@@ -79,10 +75,7 @@ class Doctor(Character.Character):
 
     # still needs to protect character from incoming attacks
     def quarantine(self, gamestate):
-        if self.side == "L":
-            gamestate.left_side[self.id].quarantine_switch = True
-        elif self.side == "R":
-            gamestate.right_side[self.id].quarantine_switch = True
+        self.quarantine_switch = True
         return gamestate
 
     def attack(self, victim):
@@ -123,8 +116,5 @@ class Doctor(Character.Character):
         return gamestate
 
     def surgery(self, gamestate):
-        if self.side == "L":
-            gamestate.left_side[self.id].heal(75)
-        elif self.side == "R":
-            gamestate.right_side[self.id].heal(75)
+        self.heal(75)
         return gamestate

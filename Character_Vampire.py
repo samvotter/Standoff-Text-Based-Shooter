@@ -35,7 +35,8 @@ class Vampire(Character.Character):
         elif choice == 4:
             self.turn()
         elif choice == 5:
-            self.sparkle()
+            self.sparkle(gamestate)
+            return gamestate
         elif choice == 6:
             self.must_be_staked()
         else:
@@ -57,8 +58,10 @@ class Vampire(Character.Character):
         # minions you kill return under your control
         pass
 
-    def sparkle(self):
+    def sparkle(self, gamestate):
         # on even turns gain 20 shields
+        if gamestate.turn % 2 == 0:
+            self.shields += 20
         pass
 
     def must_be_staked(self):

@@ -26,39 +26,45 @@ class Lawman(Character.Character):
         choice = self.upgrade_dict[chosen]
         if choice == 1:
             self.deputize(gamestate)
+            return gamestate
         elif choice == 2:
             self.mount_up(gamestate)
+            return gamestate
         elif choice == 3:
             self.partner(gamestate)
+            return gamestate
         elif choice == 4:
             self.incorruptible(gamestate)
+            return gamestate
         elif choice == 5:
             self.sheriffs_privilege(gamestate)
+            return gamestate
         elif choice == 6:
             self.arrest(gamestate)
+            return gamestate
         else:
             print("ERROR APPLYING UPGRADE")
 
     def deputize(self, gamestate):
         # target minion joins your side.
-        pass
+        return gamestate
 
     def mount_up(self, gamestate):
         # undecided
-        pass
+        return gamestate
 
     def partner(self, gamestate):
         # undecided
-        pass
+        return gamestate
 
     def incorruptible(self, gamestate):
         # you are incapable of hitting anything other than your intended target
-        pass
+        return gamestate
 
     def sheriffs_privilege(self, gamestate):
         # your attacks land first, then your opponent responds.
-        pass
+        return gamestate
 
     def arrest(self, gamestate):
         # if your target has 25 health or less, they automatically surrender
-        pass
+        return gamestate

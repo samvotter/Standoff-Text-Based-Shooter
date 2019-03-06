@@ -17,6 +17,9 @@ class Alien(Character.Character):
         self.upgrades.append("Future Tech:\n\t Your successful attacks always do 10 more damage "
                              "than they otherwise would.")
 
+        self.stun_switch = False
+        self.future_switch = False
+
         self.upgrade_dict["Reactive Design:\n\t If you take damage on a specific body part, the next time that "
                              "spot would take damage, ignore that damage."] = 1
         self.upgrade_dict["Slow Shield:\n\t Gain 100 shields."] = 2
@@ -54,10 +57,7 @@ class Alien(Character.Character):
         return gamestate
 
     def slow_shield(self, gamestate):
-        if self.side == "L":
-            gamestate.left_side[self.id].shields = 100
-        elif self.side == "R":
-            gamestate.right_side[self.id].shields = 100
+        self.shields += 100
         return gamestate
 
     def abduct(self, gamestate):
@@ -67,7 +67,11 @@ class Alien(Character.Character):
         return gamestate
 
     def set_to_stun(self, gamestate):
+        self.stun_switch = True
         return gamestate
 
     def future_tech(self, gamestate):
-        return gamestate
+        return
+
+
+

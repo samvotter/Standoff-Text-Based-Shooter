@@ -1,3 +1,16 @@
+v28:
+greatly simplified and improved character code and gameboard.
+	Now when characters take damage it is always handled at the character level
+	Removed all pointless getters and setters
+	Characters choose their targets each round
+	characters are no longer tracked by their position on a side but pass the object directly
+Added a Wizard class
+	Other potential classes: Necromancer 
+
+v27:
+continued work updating various classes and stream lining code functionality.
+It may be necessary to change how attacks and damage are calculated. Move from gameboard to character class
+
 v26:
 Continued work updating various classes. From Alien through Doughboys is now a lot more
     complete.

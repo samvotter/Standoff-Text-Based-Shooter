@@ -59,89 +59,58 @@ class Knight(Character.Character):
         # if you run out of ammo:
         # your attacks no longer cost ammo. Gain +15 damage and +20% accuracy.
         # You must wait at least 1 turn before this takes effect.
-        if self.side == "L":
-            gamestate.left_side[self.id].longsword_switch = True
-            gamestate.left_side[self.id].longsword_stun = True
-        elif self.side == "R":
-            gamestate.right_side[self.id].longsword_switch = True
-            gamestate.right_side[self.id].longsword_stun = True
+        self.longsword_switch = True
+        self.longsword_stun = True
         return gamestate
 
     def empty_the_chamber(self, gamestate):
         # Fire all of your remaining ammunition for 2/7 base damage.
-        if self.side == "L":
-            gamestate.left_side[self.id].empty_switch = True
-        elif self.side == "R":
-            gamestate.right_side[self.id].empty_switch = True
+        self.empty_switch = True
         return gamestate
 
     def raise_shield(self, gamestate):
         # Trade the maximum of up to 2 bullets for 25 shields each.
-        if self.side == "L":
-            times = 2
-            while gamestate.left_side[self.id].get_ammo() > 0 and times > 0:
-                gamestate.left_side[self.id].change_shields('+', 25)
-                gamestate.left_side[self.id].ammo -= 1
-                times -= 1
-        elif self.side == "R":
-            times = 2
-            while gamestate.right_side[self.id].get_ammo() > 0 and times > 0:
-                gamestate.right_side[self.id].change_shields('+', 25)
-                gamestate.right_side[self.id].ammo -= 1
-                times -= 1
+        times = 2
+        while self.ammo > 0 and times > 0:
+            self.shields += 25
+            self.ammo -= 1
+            times -= 1
         return gamestate
 
     def suit_of_armor(self, gamestate):
         # Trade the maximum of up to 3 bullets:
         #  1 bullet gives 5 armor. 2 bullets gives 9 armor. 3 bullets gives 12 armor.
-        if self.side == "L":
-            times = 3
-            gift = 5
-            while gamestate.left_side[self.id].get_ammo() > 0 and times > 0:
-                gamestate.left_side[self.id].armor += gift
-                gamestate.left_side[self.id].ammo -= 1
-                times -= 1
-                gift -= 1
-        elif self.side == "R":
-            times = 3
-            gift = 5
-            while gamestate.right_side[self.id].get_ammo() > 0 and times > 0:
-                gamestate.right_side[self.id].armor += gift
-                gamestate.right_side[self.id].ammo -= 1
-                times -= 1
-                gift -= 1
+        times = 3
+        gift = 5
+        while self.ammo > 0 and times > 0:
+            self.armor += gift
+            self.ammo -= 1
+            times -= 1
+            gift -= 1
         return gamestate
 
     def chivalry(self, gamestate):
         # Give one bullet to all friendly characters
         if self.side == "L":
             for character in gamestate.left_side:
-                if gamestate.left_side[self.id].ammo > 0:
+                if self.ammo > 0:
                     character.ammo += 1
-                    gamestate.left_side[self.id].ammo -= 1
+                    self.ammo -= 1
         elif self.side == "R":
             for character in gamestate.right_side:
-                if gamestate.right_side[self.id].ammo > 0:
+                if self.ammo > 0:
                     character.ammo += 1
-                    gamestate.right_side[self.id].ammo -= 1
+                    self.ammo -= 1
         return gamestate
 
     def squire(self, gamestate):
         # Resupply yourself with another 6 ammo before combat 3 turns from now.
-        wait = gamestate.turn + 3
-        if self.side == "L":
-            gamestate.left_side[self.id].squire_wait_end = wait
-        elif self.side == "R":
-            gamestate.right_side[self.id].squire_wait_end = wait
+        self.squire_wait_end = gamestate.turn + 3
         return gamestate
 
     def before_combat(self, gamestate):
         if gamestate.turn == self.squire_wait_end:
-            if self.side == "L":
-                gamestate.left_side[self.id].ammo += 6
-            elif self.side == "R":
-                gamestate.right_side[self.id].ammo += 6
-            return gamestate
+            self.ammo += 6
         else:
             return gamestate
 
@@ -150,7 +119,6 @@ class Knight(Character.Character):
         result = []
         # if character is stunned
         if self.wait > 0:
-            result.append([self.get_id(), None, None, None])
             print("But", self.get_name(), "could not attack this turn.")
             self.wait -= 1
             return result
@@ -158,39 +126,36 @@ class Knight(Character.Character):
         if self.longsword_switch is True:
             # and just ran out of ammo
             if self.longsword_stun is True and self.ammo == 0:
-                result.append([self.get_id(), None, None, None])
                 print("But", self.get_name(), "could not attack this turn.")
                 self.longsword_stun = False
                 self.accuracy += 20
                 return result
-            # or they still have ammo so they
+            # but they still have ammo so they fire
             elif self.ammo > 0:
-                # go through the gun sequence
+                # fire everything
                 if self.empty_switch is True:
-                    # fire everything
                     while self.ammo > 0:
                         print('*BANG!*', end='')
                         if self.hits(victim) is True:
                             print("- The shot hit!")
-                            result.append(
-                                [self.get_id(), self.pick_bodypart(), self.get_damage() * (2 / 7), self.get_target()])
+                            result.append([self.target, self.pick_bodypart(), self.damage * (2 / 7), self.bleed_dmg])
                             self.ammo -= 1
                         else:
-                            result.append([self.get_id(), None, None, self.get_target()])
+                            result.append([self.target, "Miss"])
                             print("- The shot missed!")
                             self.ammo -= 1
                     self.empty_switch = False
                     return result
                 # fire once
                 else:
-                    if self.fire(victim) is True:
+                    if self.fire() is True:
                         print('*BANG!*', end='')
                         if self.hits(victim) is True:
                             print("- The shot hit!")
-                            result.append([self.get_id(), self.pick_bodypart(), self.get_damage(), self.get_target()])
+                            result.append([self.target, self.pick_bodypart(), self.damage, self.bleed_dmg])
                             return result
                         else:
-                            result.append([self.get_id(), None, None, self.get_target()])
+                            result.append([self.target, "Miss"])
                             print("- The shot missed!")
                             return result
                     else:
@@ -200,9 +165,9 @@ class Knight(Character.Character):
                 print('*SWING!*', end='')
                 if self.hits(victim) is True:
                     print("- The strike landed true!")
-                    result.append([self.get_id(), self.pick_bodypart(), self.get_damage()+15, self.get_target()])
+                    result.append([self.target, self.pick_bodypart(), self.damage+15, self.bleed_dmg])
                 else:
-                    result.append([self.get_id(), None, None, self.get_target()])
+                    result.append([self.target, "Miss"])
                     print("- The shot missed!")
                 return result
             # gun sequence
@@ -213,27 +178,25 @@ class Knight(Character.Character):
                     print('*BANG!*', end='')
                     if self.hits(victim) is True:
                         print("- The shot hit!")
-                        result.append(
-                            [self.get_id(), self.pick_bodypart(), self.get_damage() * (2 / 7), self.get_target()])
+                        result.append([self.target, self.pick_bodypart(), self.damage * (2 / 7), self.bleed_dmg])
                         self.ammo -= 1
                     else:
-                        result.append([self.get_id(), None, None, self.get_target()])
+                        result.append([self.target, "Miss"])
                         print("- The shot missed!")
                         self.ammo -= 1
                 return result
             # fire once
             else:
-                if self.fire(victim) is True:
+                if self.fire() is True:
                     print('*BANG!*', end='')
                     if self.hits(victim) is True:
                         print("- The shot hit!")
-                        result.append([self.get_id(), self.pick_bodypart(), self.get_damage(), self.get_target()])
+                        result.append([self.target, self.pick_bodypart(), self.damage, self.bleed_dmg])
                         return result
                     else:
-                        result.append([self.get_id(), None, None, self.get_target()])
+                        result.append([self.target, "Miss"])
                         print("- The shot missed!")
                         return result
                 else:
-                    result.append([self.get_id(), None, None, self.get_target()])
                     print("*CLICK!*", self.get_name(), "has run out of ammo.")
                     return result

@@ -8,20 +8,20 @@ class Doughboy(Character.Character):
         super().__init__(last, health, armor, shields)
         self.last = "Doughboy"
         self.upgrades.append("Entrench:\n\t Reduce all enemy accuracy by 20%.")
-        self.upgrades.append("Field Rations:\n\t Every 3 turns, heal for 20.")
-        self.upgrades.append("Reload:\n\t It takes as man turns as you are bleeding to fully reload.")
+        self.upgrades.append("Field Rations:\n\t Every 2 turns, heal for 20.")
+        self.upgrades.append("Reload:\n\t It takes as many turns as you are bleeding to fully reload.")
         self.upgrades.append("TBA:\n\t ")
         self.upgrades.append("TBA:\n\t .")
         self.upgrades.append("TBA:\n\t ..")
 
         self.rations_switch = False
-        self.rations_counter = 3
+        self.rations_counter = 2
         self.reload_switch = False
         self.reload_wait = None
 
         self.upgrade_dict["Entrench:\n\t Reduce all enemy accuracy by 20%."] = 1
-        self.upgrade_dict["Field Rations:\n\t Every 3 turns, heal for 20."] = 2
-        self.upgrade_dict["Reload:\n\t It takes as man turns as you are bleeding to fully reload."] = 3
+        self.upgrade_dict["Field Rations:\n\t Every 2 turns, heal for 20."] = 2
+        self.upgrade_dict["Reload:\n\t It takes as many turns as you are bleeding to fully reload."] = 3
         self.upgrade_dict["TBA:\n\t "] = 4
         self.upgrade_dict["TBA:\n\t ."] = 5
         self.upgrade_dict["TBA:\n\t .."] = 6
@@ -57,54 +57,32 @@ class Doughboy(Character.Character):
         return gamestate
 
     def field_rations(self, gamestate):
-        # every 3 turns heal for 20
-        if self.side == "L":
-            gamestate.left_side[self.id].rations_switch = True
-        elif self.side == "R":
-            gamestate.right_side[self.id].rations_switch = True
+        # every 2 turns heal for 20
+        self.rations_switch = True
         return gamestate
 
     def turn_start(self, gamestate):
         if self.rations_switch is True:
             if self.side == "L":
-                gamestate.left_side[self.id].rations_counter -= 1
-                if gamestate.left_side[self.id].rations_counter <= 0:
-                    gamestate.left_side[self.id].heal(20)
-                    gamestate.left_side[self.id].rations_counter = 3
-            elif self.side == "R":
-                gamestate.right_side[self.id].rations_counter -= 1
-                if gamestate.right_side[self.id].rations_counter <= 0:
-                    gamestate.right_side[self.id].heal(20)
-                    gamestate.right_side[self.id].rations_counter = 3
+                self.rations_counter -= 1
+                if self.rations_counter <= 0:
+                    self.heal(20)
+                    self.rations_counter = 2
         return gamestate
 
     def reload(self, gamestate):
         # It takes you as many turns as you are bleeding to
         # fully reload your weapon
-        if self.side == "L":
-            gamestate.left_side[self.id].reload_switch = True
-        elif self.side == "R":
-            gamestate.right_side[self.id].reload_switch = True
+        self.reload_switch = True
         return gamestate
 
     def turn_start(self, gamestate):
         if self.reload_switch is True:
-            if self.side == "L":
-                gamestate.left_side[self.id].reload_wait = self.bleed
-            elif self.side == "R":
-                gamestate.right_side[self.id].reload_wait = self.bleed
+            self.reload_wait = self.bleed
         if self.ammo <= 0:
-            if self.side == "L":
-                gamestate.left_side[self.id].reload_switch = False
-                gamestate.left_side[self.id].reload_wait -= 1
-            elif self.side == "R":
-                gamestate.right_side[self.id].reload_switch = False
-                gamestate.right_side[self.id].reload_wait -= 1
+            self.reload_switch = False
+            self.reload_wait -= 1
         if self.reload_wait <= 0:
-            if self.side == "L":
-                gamestate.left_side[self.id].ammo += 6
-                gamestate.left_side[self.id].reload_switch = True
-            elif self.side == "R":
-                gamestate.right_side[self.id].ammo += 6
-                gamestate.right_side[self.id].reload_switch = True
+            self.ammo += 6
+            self.reload_switch = True
         return gamestate

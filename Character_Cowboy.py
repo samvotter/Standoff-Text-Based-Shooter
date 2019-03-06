@@ -51,10 +51,7 @@ class Cowboy(Character.Character):
 
     def deadshot(self, gamestate):
         # You never miss
-        if self.side == "L":
-            gamestate.left_side[self.id].set_accuracy(100)
-        elif self.side == "R":
-            gamestate.right_side[self.id].set_accuracy(100)
+        self.accuracy = 100
         return gamestate
 
     def two_guns(self, gamestate):
@@ -75,37 +72,31 @@ class Cowboy(Character.Character):
 
     def lead_poisoning(self, gamestate):
         # Your attacks inflict 4 stacks of bleeding."
-        if self.side == "L":
-            gamestate.left_side[self.id].change_bleed_dmg('*', 4)
-        elif self.side == "R":
-            gamestate.right_side[self.id].set_accuracy('*', 4)
+        self.bleed_dmg *= 4
         return gamestate
 
     def attack(self, victim):
         result = []
         # if fire returns true
         if self.wait > 0:
-            result.append([self.get_id(), None, None, None])
             print("But", self.get_name(), "could not attack this turn.")
             self.wait -= 1
             return result
-        if self.fire(victim) is True:
+        if self.fire() is True:
             print('*BANG!*', end='')
             if self.hits(victim) is True:
                 if self.silver_bullets_switch is True:
                     print("- The shot hit!")
-                    result.append([self.get_id(), self.pick_bodypart(), self.get_damage()*2, self.get_target()])
+                    result.append([self.target, self.pick_bodypart(), self.damage*2, self.bleed_dmg])
                     self.silver_bullets_switch = False
                     return result
                 else:
                     print("- The shot hit!")
-                    result.append([self.get_id(), self.pick_bodypart(), self.get_damage(), self.get_target()])
+                    result.append([self.target, self.pick_bodypart(), self.damage, self.bleed_dmg])
                     return result
             else:
-                result.append([self.get_id(), None, None, self.get_target()])
                 print("- The shot missed!")
                 return result
         else:
-            result.append([self.get_id(), None, None, self.get_target()])
             print("*CLICK!*", self.get_name(), "has run out of ammo.")
             return result

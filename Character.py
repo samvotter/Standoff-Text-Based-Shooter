@@ -24,41 +24,18 @@ class Character:
         self.upgrade_dict = {}
 
         # Gun Stats
-        self.target = 0
-        self.strike = False
         self.accuracy = 60
         self.damage = 35
         self.ammo = 6
         self.bleed_dmg = 1
 
         # Identifier
-        self.id = 0
         self.side = ""
+        self.target = None
 
     # Player Getters
     def get_name(self):
         return self.first + " " + self.last
-
-    def get_health(self):
-        return self.health
-
-    def get_armor(self):
-        return self.armor
-
-    def get_shields(self):
-        return self.shields
-
-    def get_wait(self):
-        return self.wait
-
-    def get_maxhp(self):
-        return self.maxhp
-
-    def get_avoidance(self):
-        return self.avoidance
-
-    def get_bleed(self):
-        return self.bleed
 
     def get_alive(self):
         if self.health > 0:
@@ -94,33 +71,54 @@ class Character:
             self.armor -= amount
         return True
 
-    def change_bleed(self, amount):
-        self.bleed += amount
-
-    def take_damage(self, damage):
-        # if the target is alive . . .
-        reduce = damage
-        if self.alive is True:
-            # and they have shields . . .
-            if self.shields > 0:
-                # shields reduce incoming damage by a percentage.
-                damage *= self.shields/100
-                self.shields -= reduce
-                if self.shields < 0:
-                    self.shields = 0
-            # and if they have armor
-            if self.armor > 0:
-                # armor reduces incoming damage by a flat amount.
-                damage -= self.armor
-            # and not all of it was blocked
-            if damage > 0:
-                self.health -= damage
-                return True
-            else:
-                return False
-        # if the target is dead
-        else:
+    def take_damage(self, result):
+        if result[2] is None:
+            print(self.get_name(), "took no damage.")
             return False
+        else:
+            if result[1] == "Chest":
+                damage = result[2]
+            elif result[1] == "Arms":
+                damage = result[2]*(3 / 5)
+                self.accuracy *= (9 / 10)
+            elif result[1] == "Hands":
+                damage = result[2] * (1 / 5)
+                self.accuracy /= 2
+            elif result[1] == "Legs":
+                damage = result[2] * (3 / 5)
+            elif result[1] == "Feet":
+                damage = result[2] * (1 / 5)
+            elif result[1] == "Head":
+                damage = result[2] * 2
+            else:
+                damage = result[2]
+            # if the target is alive . . .
+            reduce = damage
+            if self.alive is True:
+                # and they have shields . . .
+                if self.shields > 0:
+                    # shields reduce incoming damage by a percentage.
+                    damage *= (100-self.shields)/100
+                    self.shields -= reduce
+                    if self.shields < 0:
+                        self.shields = 0
+                # and if they have armor
+                if self.armor > 0:
+                    # armor reduces incoming damage by a flat amount.
+                    damage -= self.armor
+                # and not all of it was blocked
+                if damage > 0:
+                    self.health -= damage
+                    self.bleed += result[3]
+                    print(result[0].get_name(), "was hit in the", result[1], "for", damage)
+                    return True
+                else:
+                    print(self.get_name(), "All damage was blocked!")
+                    return False
+            # if the target is dead
+            else:
+                print(self.get_name(), "was dead.")
+                return False
 
     def bleeds(self):
         # if the target is alive . . .
@@ -144,25 +142,6 @@ class Character:
             self.health += heal
             return True
 
-    # Gun Getters
-    def get_strike(self):
-        return self.strike
-
-    def get_accuracy(self):
-        return self.accuracy
-
-    def get_damage(self):
-        return self.damage
-
-    def get_ammo(self):
-        return self.ammo
-
-    def get_bleed_dmg(self):
-        return self.bleed_dmg
-
-    def get_target(self):
-        return self.target
-
     def change_accuracy(self, symbol, amount):
         if symbol == "+":
             self.accuracy += amount
@@ -173,44 +152,8 @@ class Character:
         elif self.accuracy <= 0:
             self.accuracy = 0
 
-    def set_accuracy(self, amount):
-        self.accuracy = amount
-
-    def set_ammo(self, amount):
-        self.ammo = amount
-
-    def set_wait(self, amount):
-        self.wait = amount
-
-    def change_bleed_dmg(self, symbol, amount):
-        if symbol == "+":
-            self.bleed_dmg += amount
-        else:
-            self.bleed_dmg *= amount
-
-    def change_damage(self, symbol, amount):
-        if symbol == "+":
-            self.damage += amount
-        else:
-            self.damage *= amount
-
-    def set_bleed_dmg(self, amount):
-        self.bleed_dmg = amount
-
-    def set_target(self, id):
-        self.target = id
-
-    def set_shields(self, amount):
-        self.shields = amount
-
-    def change_shields(self, symbol, amount):
-        if symbol == "+":
-            self.shields += amount
-        else:
-            self.shields *= amount
-
     # Gun Functions
-    def fire(self, victim):
+    def fire(self):
         # is there ammo to fire
         if self.ammo > 0:
             # fire!
@@ -221,12 +164,11 @@ class Character:
 
     def hits(self, victim):
         # do you hit?
-        if random.randint(0, 100) <= self.accuracy - victim.get_avoidance():
-            self.strike = True
+        if random.randint(0, 100) <= self.accuracy - victim.avoidance:
+            return True
         # if not then miss
         else:
-            self.strike = False
-        return self.strike
+            return False
 
     def pick_bodypart(self):
         roll = random.randint(1, 6)
@@ -249,42 +191,46 @@ class Character:
     def attack(self, victim):
         result = []
         if self.wait > 0:
-            result.append([self.get_id(), None, None, None])
             print("But", self.get_name(), "could not attack this turn.")
             self.wait -= 1
             return result
         # if fire returns true
-        if self.fire(victim) is True:
+        if self.fire() is True:
             print('*BANG!*', end='')
             if self.hits(victim) is True:
                 print("- The shot hit!")
-                result.append([self.get_id(), self.pick_bodypart(), self.get_damage(), self.get_target()])
+                result.append([self.target, self.pick_bodypart(), self.damage, self.bleed_dmg])
                 return result
             else:
-                result.append([self.get_id(), None, None, self.get_target()])
+                result.append([self.target, "Miss"])
                 print("- The shot missed!")
                 return result
         else:
-            result.append([self.get_id(), None, None, self.get_target()])
             print("*CLICK!*", self.get_name(), "has run out of ammo.")
             return result
 
     def before_combat(self, gamestate):
         return gamestate
 
+    def after_combat(self, gamestate):
+        return gamestate
+
     def turn_start(self, gamestate):
         return gamestate
 
-    # Game Getter
-    def get_id(self):
-        return self.id
-
-    def get_side(self):
-        return self.side
-
     # Game Functions
-    def set_id(self, identity):
-        self.id = identity
+
+    def set_target(self,side):
+        i = 1
+        for character in side:
+            print(i, end=' ')
+            print(character.get_name())
+            i += 1
+        choice = -1
+        while choice > len(side) or choice < 0:
+            choice = int(input("Type the number of the character you wish to attack."))
+        self.target = side[choice-1]
 
     def set_side(self, side):
         self.side = side
+
