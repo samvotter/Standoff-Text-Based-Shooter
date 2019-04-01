@@ -1,11 +1,12 @@
 # parent
 import Character
 
+
 # 5 abilities left
 class Doctor(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Doctor"
         self.upgrades.append("Bandage:\n\t Remove all stacks of bleeding from yourself.")
         self.upgrades.append("Reputation:\n\t Minions will not attack you.")
@@ -58,10 +59,10 @@ class Doctor(Character.Character):
         self.triage_switch = True
         if self.side == "L":
             for character in gamestate.left_side:
-                gamestate.left_side[self.id].triage_dict[character.get_name()] = character.bleed
+                self.triage_dict[character.get_name()] = character.bleed
         elif self.side == "R":
             for character in gamestate.right_side:
-                gamestate.right_side[self.id].triage_dict[character.get_name()] = character.bleed
+                self.triage_dict[character.get_name()] = character.bleed
         return gamestate
 
     def turn_start(self, gamestate):
@@ -82,27 +83,28 @@ class Doctor(Character.Character):
         result = []
         if self.quarantine_switch is True:
             self.heal(20)
-            result.append([self.get_id(), None, None, None])
+            result.append([self.target, None, None, None])
             print("But", self.get_name(), "instead chose to sit this round out.")
+            self.quarantine_switch = False
             return result
         if self.wait > 0:
-            result.append([self.get_id(), None, None, None])
+            result.append([self.target, None, None, None])
             print("But", self.get_name(), "could not attack this turn.")
             self.wait -= 1
             return result
         # if fire returns true
-        if self.fire(victim) is True:
+        if self.fire() is True:
             print('*BANG!*', end='')
             if self.hits(victim) is True:
                 print("- The shot hit!")
-                result.append([self.get_id(), self.pick_bodypart(), self.get_damage(), self.get_target()])
+                result.append([self.target, self.pick_bodypart(), self.damage, self.bleed_dmg])
                 return result
             else:
-                result.append([self.get_id(), None, None, self.get_target()])
+                result.append([self.target, None, None, None])
                 print("- The shot missed!")
                 return result
         else:
-            result.append([self.get_id(), None, None, self.get_target()])
+            result.append([self.target, None, None, None])
             print("*CLICK!*", self.get_name(), "has run out of ammo.")
             return result
 

@@ -4,8 +4,8 @@ import Character
 
 class EldritchHorror(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Eldritch Horror"
         self.upgrades.append("Impossible Geometries:\n\t Misses become hits, hits become misses.")
         self.upgrades.append("Cult:\n\t Gain control of all minions. After two turns, all minions die.")

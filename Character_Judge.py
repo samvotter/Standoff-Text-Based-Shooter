@@ -5,8 +5,8 @@ import Character
 # all incomplete
 class Judge(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Judge"
         self.upgrades.append("Jury:\n\t Gain 12 Jury minions. Each one has a 50% chance of voting innocent or guilty."
                              " Innocent heals the target for 5, guilty damages the target for 10.")

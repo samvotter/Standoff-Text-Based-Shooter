@@ -5,8 +5,8 @@ import Character
 # 6 abilities left
 class Gambler(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Gambler"
         self.upgrades.append("Fold:\n\t You may choose to intentionally miss. This does not cost ammo.")
         self.upgrades.append("Better Hand:\n\t Hitting your opponent in the hand allows you to fire again.")

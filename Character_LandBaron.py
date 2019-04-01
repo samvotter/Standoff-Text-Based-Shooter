@@ -5,8 +5,8 @@ import Character
 # 6 abilities left
 class LandBaron(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Land Baron"
         self.upgrades.append("Scorched Earth:\n\t Deal 5 damage to each opponent for each land token you control.")
         self.upgrades.append("Monopoly:\n\t If an other player would gain a minion of any type, you gain 2 land tokens.")

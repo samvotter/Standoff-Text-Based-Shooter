@@ -5,8 +5,8 @@ import Character
 # 6 abilities left
 class Werewolf(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Werewolf"
         self.upgrades.append("Moon Cycles:\n\t On even turns, heal for 5. On odd turns, you do +10 damage.")
         self.upgrades.append("Bloodthirsty:\n\t Attacks heal you for three times the target's amount of bleeding.")

@@ -4,8 +4,8 @@ import Character
 # 6 abilities left
 class Barman(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Barman"
         self.upgrades.append("Insurance Money:\n\t All characters including yourself gain 4 stacks of burning. "
                              "In three turns, you heal for 10.")
@@ -13,9 +13,11 @@ class Barman(Character.Character):
                              "You may choose an other target to die instead.")
         self.upgrades.append("Under the Table:\n\t Take a free shot at any target"
                              " before any other upgrade cards are revealed.")
-        self.upgrades.append("Drinking Contest:\n\t every shot lowers the accuracy of target shooter by -10%.")
+        self.upgrades.append("Drinking Contest:\n\t every shot lowers the accuracy of the shooter by -10%.")
         self.upgrades.append("Pound of Flesh:\n\t When an opponent misses, you gain 5 of their health.")
         self.upgrades.append("Water Down:\n\t Everyone's damage is reduced by 10.")
+
+        self.insurance = 0
 
         self.upgrade_dict["Insurance Money:\n\t All characters including yourself gain 4 stacks of burning."
                              " In three turns, you heal for 10."] = 1
@@ -23,7 +25,7 @@ class Barman(Character.Character):
                              "You may choose an other target to die instead."] = 2
         self.upgrade_dict["Under the Table:\n\t Take a free shot at any target"
                              " before any other upgrade cards are revealed."] = 3
-        self.upgrade_dict["Drinking Contest:\n\t every shot lowers the accuracy of target shooter by -10%."] = 4
+        self.upgrade_dict["Drinking Contest:\n\t every shot lowers the accuracy of the shooter by -10%."] = 4
         self.upgrade_dict["Pound of Flesh:\n\t When an opponent misses, you gain 5 of their health."] = 5
         self.upgrade_dict["Water Down:\n\t Everyone's damage is reduced by 10."] = 6
 
@@ -51,12 +53,18 @@ class Barman(Character.Character):
             print("ERROR APPLYING UPGRADE")
 
     def insurance_money(self, gamestate):
+        for character in gamestate.left_side:
+            character.burn += 4
+        for character in gamestate.right_side:
+            character.burn += 4
+        self.insurance = gamestate.turn + 3
         return gamestate
 
     def real_power(self, gamestate):
         return gamestate
 
     def under_the_table(self, gamestate):
+        self.attack(self.target)
         return gamestate
 
     def drinking_contest(self, gamestate):
@@ -70,4 +78,9 @@ class Barman(Character.Character):
             character.damage -= 10
         for character in gamestate.right_side:
             character.damage -= 10
+        return gamestate
+
+    def turn_start(self, gamestate):
+        if gamestate.turn == self.insurance:
+            self.health += 10
         return gamestate

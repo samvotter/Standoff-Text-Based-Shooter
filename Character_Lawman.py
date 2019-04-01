@@ -5,8 +5,8 @@ import Character
 # 6 abilities left
 class Lawman(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Lawman"
         self.upgrades.append("Deputize:\n\t Target minion joins your side.")
         self.upgrades.append("Mount Up:\n\t TBA.")

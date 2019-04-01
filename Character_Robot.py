@@ -4,8 +4,8 @@ import Character
 
 class Robot(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Robot"
         self.upgrades.append("1. Reconstitute:\n\t When you are stuck, gain 1 ammo.")
         self.upgrades.append("2. Positronic Brain:\n\t Your attacks no longer hit feet or arms." \

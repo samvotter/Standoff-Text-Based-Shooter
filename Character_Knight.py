@@ -4,8 +4,8 @@ import Character
 
 class Knight(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Knight"
         self.upgrades.append("Longsword:\n\t If you run out of ammo: "
                              "after waiting 1 turn, your attacks no longer cost ammo. "

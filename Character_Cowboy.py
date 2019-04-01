@@ -4,8 +4,8 @@ import Character
 # 3 abilities left
 class Cowboy(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Cowboy"
         self.upgrades.append("Deadshot:\n\t Set your accuracy to 100%")
         self.upgrades.append("TBA:\n\t ")
@@ -75,7 +75,7 @@ class Cowboy(Character.Character):
         self.bleed_dmg *= 4
         return gamestate
 
-    def attack(self, victim):
+    def attack(self, gamestate):
         result = []
         # if fire returns true
         if self.wait > 0:
@@ -84,8 +84,8 @@ class Cowboy(Character.Character):
             return result
         if self.fire() is True:
             print('*BANG!*', end='')
-            if self.hits(victim) is True:
-                if self.silver_bullets_switch is True:
+            if self.hits(self.target):
+                if self.silver_bullets_switch:
                     print("- The shot hit!")
                     result.append([self.target, self.pick_bodypart(), self.damage*2, self.bleed_dmg])
                     self.silver_bullets_switch = False
@@ -95,6 +95,8 @@ class Cowboy(Character.Character):
                     result.append([self.target, self.pick_bodypart(), self.damage, self.bleed_dmg])
                     return result
             else:
+                if self.silver_bullets_switch:
+                    self.silver_bullets_switch = False
                 print("- The shot missed!")
                 return result
         else:

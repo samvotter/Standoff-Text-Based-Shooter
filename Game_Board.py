@@ -55,8 +55,8 @@ class CombatEncounterSpace:
         self.turn = 0
 
     def choose_characters(self):
-        self.left_side.append(Character_Cowboy.Cowboy("Cowboy", 100, 0, 0))
-        self.right_side.append(Character_Alien.Alien("Alien", 100, 0, 0))
+        self.left_side.append(Character_Cowboy.Cowboy())
+        self.right_side.append(Character_PodunkCowpoke.Podunk_Cowpoke())
 
     def round(self, gamestate):
         # Rounds are resolved by:
@@ -71,12 +71,9 @@ class CombatEncounterSpace:
 
         # UI - Assign Team Numbers
         # Left Side
-        l = 0
         for character in gamestate.left_side:
             character.set_side("L")
-
-        #Right Side
-        r = 0
+        # Right Side
         for character in gamestate.right_side:
             character.set_side("R")
 
@@ -84,7 +81,6 @@ class CombatEncounterSpace:
         # Left Side
         for character in gamestate.left_side:
             gamestate = character.turn_start(gamestate)
-
         # Right Side
         for character in gamestate.right_side:
             gamestate = character.turn_start(gamestate)
@@ -99,7 +95,7 @@ class CombatEncounterSpace:
             print(character.get_name() + ": " + str(character.health))
             if float(character.shields) > 0:
                 print("Shields:", str(character.shields))
-        # UI
+        # Right Side
         print("********************************************************")
         print("Right Side: ")
         # Right Side
@@ -108,6 +104,15 @@ class CombatEncounterSpace:
             if float(character.shields) > 0:
                 print("Shields:", str(character.shields))
         print("********************************************************")
+
+        # UI - Aim
+        # Left Side
+        for character in gamestate.left_side:
+            character.set_target(gamestate.right_side)
+
+        # Right Side
+        for character in gamestate.right_side:
+            character.set_target(gamestate.left_side)
 
         # UI - Upgrades
         if gamestate.turn == 0 or gamestate.turn == 1 or gamestate.turn == 3 or gamestate.turn == 5:
@@ -131,29 +136,18 @@ class CombatEncounterSpace:
         for character in gamestate.right_side:
             gamestate = character.before_combat(gamestate)
 
-        # UI - Aim
-        # Left Side
-        for character in gamestate.left_side:
-            character.set_target(gamestate.right_side)
-
-        # Right Side
-        for character in gamestate.right_side:
-            character.set_target(gamestate.left_side)
-
         # UI - Firing
         # Left Side
         print("********************************************************")
-        print("Left Side chooses their targets")
         for character in gamestate.left_side:
             print(character.get_name(), "pulls the trigger . . .")
-            r_results.append(character.attack(character.target))
+            r_results.append(character.attack(gamestate))
 
         # Right Side
         print("********************************************************")
-        print("Left Side chooses their targets")
         for character in gamestate.right_side:
             print(character.get_name(), "pulls the trigger . . .")
-            l_results.append(character.attack(character.target))
+            l_results.append(character.attack(gamestate))
 
         # UI - Figure out damage results:
         # Left Side did stuff
@@ -186,31 +180,52 @@ class CombatEncounterSpace:
         for character in gamestate.right_side:
             gamestate = character.after_combat(gamestate)
 
-        # UI - make bleed
+        # UI - make bleed / burn
         # Left Side
         for character in gamestate.left_side:
             if character.bleed > 0:
                 character.bleeds()
-                print(character.get_name(), "bleeds for:", character.bleed)
+                character.burns(gamestate)
+                for minion in character.minions:
+                    if minion.bleed > 0:
+                        minion.bleeds()
+                        minion.burns(gamestate)
         # Right Side
         for character in gamestate.right_side:
             if character.bleed > 0:
                 character.bleeds()
-                print(character.get_name(), "bleeds for:", character.bleed)
+                character.burns(gamestate)
+                for minion in character.minions:
+                    if minion.bleed > 0:
+                        minion.bleeds()
+                        minion.burns(gamestate)
 
         # UI - Find out who is alive
         # Left Side
         for character in gamestate.left_side:
-            if character.alive is False:
+            for minion in character.minions:
+                minion.get_alive()
+            if character.get_alive() is False:
                 print(character.get_name(), "is dead.")
                 gamestate.graveyard.append([character, "Left"])
                 gamestate.left_side.remove(character)
         # Right Side
         for character in gamestate.right_side:
-            if character.alive is False:
+            for minion in character.minions:
+                minion.get_alive()
+            if character.get_alive() is False:
                 print(character.get_name(), "is dead.")
                 gamestate.graveyard.append([character, "Right"])
                 gamestate.right_side.remove(character)
+
+        # UI - End Turn trigger
+        # Left Side
+        for character in gamestate.left_side:
+            gamestate = character.end_turn(gamestate)
+
+        # Right Side
+        for character in gamestate.right_side:
+            gamestate = character.end_turn(gamestate)
 
         # UI - Check Winners
         print("********************************************************")

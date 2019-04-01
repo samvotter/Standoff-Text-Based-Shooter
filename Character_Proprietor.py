@@ -4,8 +4,8 @@ import Character
 # 6 abilities left
 class Proprietor(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Proprietor"
         self.upgrades.append("Sell Clothes:\n\t Target opponent gains 5 armor, loses 1 bullet, you gain one bullet.")
         self.upgrades.append("Costly Interactions:\n\t If an opponent hits you, they lose 7 health.")

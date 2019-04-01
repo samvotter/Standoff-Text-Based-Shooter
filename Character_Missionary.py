@@ -1,11 +1,12 @@
 # parent
 import Character
 
+
 # 6 abilities left
 class Missionary(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Missionary"
         self.upgrades.append("Come to Jesus:\n\t If you are not being targeted, deal twice as much damage.")
         self.upgrades.append("Martyrdom:\n\t Friendly characters heal equal to the damage you take.")

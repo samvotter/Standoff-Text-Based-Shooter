@@ -5,8 +5,8 @@ import Character
 # 6 abilities left
 class Vampire(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Vampire"
         self.upgrades.append("Hypnosis:\n\t Retarget incoming attack to any target other than the shooter.")
         self.upgrades.append("Trance:\n\t Change the target of an opponent's attack.")

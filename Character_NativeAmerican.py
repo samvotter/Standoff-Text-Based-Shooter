@@ -5,8 +5,8 @@ import Character
 # 6 abilities left
 class NativeAmerican(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Native American"
         self.upgrades.append("Virgin Land:\n\t The upgrade card your opponent chooses"
                              " this turn provides the opposite effect.")

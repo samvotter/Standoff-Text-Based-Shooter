@@ -1,30 +1,67 @@
 # parent
 import Character
 
+# child
+import Minion_Cattleman as m
+
 
 class Cattleman(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
+    def __init__(self):
+        super().__init__()
         self.last = "Cattleman"
-        self.upgrades[0] = "1. Bull: Create a Cow minion."
-        self.upgrades[1] = "2. Ol' Bessy: The next Cow minion to die will be revived" \
-                           " with 3 times as much health and will attack for 15 damage per turn."
-        self.upgrades[2] = "3. Herd: Gain 8 cow minions."
-        self.upgrades[3] = "4. Plow: Each turn, each Cow heals you for 5 health."
-        self.upgrades[4] = "5. Breeder: For each pair of Cows, create 1 new Cow minion."
-        self.upgrades[5] = "6. ."
+        self.upgrades.append("Ol' Bessy:\n\t Create a Cow minion with 45 health and 15 damage. She attacks with you.")
+        self.upgrades.append("Herd:\n\t Gain four cow minions. Cows have 15 health.")
+        self.upgrades.append("Plow:\n\t Each turn, each Cow minion heals you for 4.")
+        self.upgrades.append("Breeder:\n\t Each pair of Cow minions produces an addition cow minion on even turns.")
+        self.upgrades.append("Stampede:\n\t Cow minions attack with you for 5 damage each turn.")
+        self.upgrades.append("Bull:\n\t Whenever you take damage, create a Cow minion.")
 
-    def bull(self):
-        # a Cow minion appears on your side. It will attack
-        # for 5 each turn and if it hits your opponent
-        # they will miss.
-        pass
+        self.herd_switch = False
+        self.breeder_switch = False
+        self.stampede_switch = False
+        self.bull_switch = False
 
-    def ol_bessy(self):
-        # the next Cow minion to die will be revived with 3
-        # times as much health and will attack for 15 damage per turn.
-        pass
+        self.upgrade_dict["Ol' Bessy:\n\t Create a Cow minion with 45 health and 15 damage. She attacks with you."] = 1
+        self.upgrade_dict["Herd:\n\t Gain four cow minions. Cows have 15 health."] = 2
+        self.upgrade_dict["Plow:\n\t Each turn, each Cow minion heals you for 4."] = 3
+        self.upgrade_dict["Breeder:\n\t Each pair of Cow minions produces an addition cow minion on even turns."] = 4
+        self.upgrade_dict["Stampede:\n\t Cow minions attack with you for 5 damage each turn."] = 5
+        self.upgrade_dict["Bull:\n\t Whenever you take damage, create a Cow minion."] = 6
+
+    def apply_upgrade(self, chosen, gamestate):
+        choice = self.upgrade_dict[chosen]
+        if choice == 1:
+            self.bessy(gamestate)
+            return gamestate
+        elif choice == 2:
+            self.herd(gamestate)
+            return gamestate
+        elif choice == 3:
+            self.plow(gamestate)
+            return gamestate
+        elif choice == 4:
+            self.breed(gamestate)
+            return gamestate
+        elif choice == 5:
+            self.stampede(gamestate)
+            return gamestate
+        elif choice == 6:
+            self.bull(gamestate)
+            return gamestate
+        else:
+            print("ERROR APPLYING UPGRADE")
+
+    def bessy(self, gamestate):
+        # Create a Cow minion with 45 health and 15 damage. She attacks with you."
+        self.minions.append(m.Cow(self, health=45, damage=15, last="Bessy"))
+        return gamestate
+
+    def herd(self):
+        # Gain four cow minions. Cows have 15 health."
+        for i in range(0,4):
+            self.minions.append(self, health=15)
+        return
 
     def purchase(self):
         # gain 8 Cow minions. They do not attack and do not have to be targeted.

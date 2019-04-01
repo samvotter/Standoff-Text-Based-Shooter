@@ -1,3 +1,23 @@
+v33:
+Created the foundation for the minion class.
+    Borrows heavily from the character class
+    to maintain universal functions with game_board.
+Added Minion support for Podunk class
+    Updated existing class code
+Changed attack function to take gamestate as an argument rather than "victim"
+
+v32:
+continued expanding the functionality of all classes
+
+v31:
+greatly expanded GUI. Many MANY MANY structural problems remain:
+    1. Button's command=function CANNOT accept arguments. This is a gigantic limitation
+    2. If I'm serious about creating a GUI, it would probably make more sense to explore
+    established graphics engines
+
+v30:
+messed around with updating the UI again. Still mostly a mystery. Discovered how to change label text though. 
+
 v28:
 greatly simplified and improved character code and gameboard.
 	Now when characters take damage it is always handled at the character level

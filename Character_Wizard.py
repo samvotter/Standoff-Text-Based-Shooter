@@ -1,12 +1,13 @@
 # parent
 import Character
 
-# 3 abilities left
-class Cowboy(Character.Character):
 
-    def __init__(self, last, health, armor, shields):
-        super().__init__(last, health, armor, shields)
-        self.last = "Cowboy"
+# 3 abilities left
+class Wizard(Character.Character):
+
+    def __init__(self):
+        super().__init__()
+        self.last = "Wizard"
         self.upgrades.append("Pyromaniac:\n\t Your attacks apply 2 stacks of burning.")
         self.upgrades.append("Deep Freeze:\n\t All opponents are frozen for 1 turn.")
         self.upgrades.append("Chain Lightning:\n\t Your next attack does full damage to up to 3 targets.")
